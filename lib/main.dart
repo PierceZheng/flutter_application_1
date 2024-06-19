@@ -3,6 +3,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'binary_tree.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -19,18 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'mySqrt:${mySqrt(x, 6)}\nsystemSqrt:${math.sqrt(x)}',
-              ),
-            ],
-          ),
-        ),
-      ),
+      home: BinaryTreeDisplay(),
     );
   }
 
