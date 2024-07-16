@@ -1,3 +1,7 @@
 {
-    "dart.flutterSdkPath": "/Users/pierce/Leo/flutter/module_taurus/.fvm/versions/3.10.6"
+    "dart.flutterSdkPath": "/Users/pierce/Leo/flutter/module_taurus/.fvm/versions/3.10.6",
+    "cSpell.words": [
+        "leftup",
+        "rightup"
+    ]
 }
