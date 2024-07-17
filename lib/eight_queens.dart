@@ -8,7 +8,7 @@ class EightQueens {
   final List<int> result = List.generate(8, (index) => -1);
 
   /// 计算八皇后问题的结果
-  /// 这里创建了 N*N 个分支，尝试每个分支的结果
+  /// 这里创建了 N^N 个分支，尝试每个分支的结果
   void cal8Queens(int row) {
     if (row == 8) {
       //递归终止条件，如果 8 行都放了棋子则表示这条分支是合法的，打印出来
