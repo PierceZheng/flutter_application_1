@@ -19,12 +19,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-    print('==========${'aaa'.compultLWSTDistance_1('bab')}');
   }
 
   @override
   Widget build(BuildContext context) {
+    print('==========${'baab'.compultLWSTDistance_2('baaccbb')}');
     EightQueens eightQueens = EightQueens();
     eightQueens.cal8Queens(0);
     return MaterialApp(
