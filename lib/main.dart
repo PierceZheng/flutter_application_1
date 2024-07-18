@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    print('==========${'baacbb'.compultMaxSubstringLength_1('baaccbb')}');
+    print('==========${'baacbb'.compultMaxSubstringLength_2('baaccbb')}');
     EightQueens eightQueens = EightQueens();
     eightQueens.cal8Queens(0);
     return MaterialApp(

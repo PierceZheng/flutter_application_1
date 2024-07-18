@@ -80,4 +80,39 @@ extension EditDistance on String {
       return max(addI, addJ);
     }
   }
+
+  int compultMaxSubstringLength_2(String other) {
+    //状态定义：对比到第(i,j)位的时候，最小的编辑长度。
+    final List<List<int>> maxLength = [];
+
+    for (int i = 0; i < length; i++) {
+      maxLength.add(List.filled(other.length, 0));
+    }
+
+    if (this[0] == other[0]) {
+      maxLength[0][0] = 1;
+    }
+
+    for (int i = 1; i < length; i++) {
+      maxLength[i][0] = maxLength[i - 1][0];
+    }
+
+    for (int j = 1; j < other.length; j++) {
+      maxLength[0][j] = maxLength[0][j - 1];
+    }
+
+    for (int i = 1; i < length; i++) {
+      for (int j = 1; j < other.length; j++) {
+        final addI = maxLength[i - 1][j];
+        final addJ = maxLength[i][j - 1];
+        final equal = maxLength[i - 1][j - 1];
+
+        final equalLength = (this[i] == other[j]) ? 1 : 0;
+
+        maxLength[i][j] = max(max(addI, addJ), equal + equalLength);
+      }
+    }
+
+    return maxLength[length - 1][other.length - 1];
+  }
 }
