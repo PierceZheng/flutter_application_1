@@ -62,4 +62,22 @@ extension EditDistance on String {
 
     return editsCount[length - 1][other.length - 1];
   }
+
+  int compultMaxSubstringLength_1(String other) {
+    return _compultMaxSubstringLength_1(other, 0, 0, 0);
+  }
+
+  int _compultMaxSubstringLength_1(String other, int i, int j, int maxLength) {
+    if (i == length || j == other.length) {
+      return maxLength;
+    }
+
+    if (this[i] == other[j]) {
+      return _compultMaxSubstringLength_1(other, i + 1, j + 1, maxLength + 1);
+    } else {
+      final addI = _compultMaxSubstringLength_1(other, i + 1, j, maxLength);
+      final addJ = _compultMaxSubstringLength_1(other, i, j + 1, maxLength);
+      return max(addI, addJ);
+    }
+  }
 }
