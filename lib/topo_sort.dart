@@ -14,7 +14,7 @@ class Graph {
 
   Graph(this._v) {
     for (int i = 0; i < _v; i++) {
-      _adj.add(LinkedList());
+      _adj.add(LinkedList<IntegerEntry>());
     }
   }
 
@@ -26,6 +26,29 @@ class Graph {
     } else {
       linkedList.add(entry);
     }
+  }
+
+  List<LinkedList<IntegerEntry>> get _inverseAdj {
+    final List<LinkedList<IntegerEntry>> inverseAdj = [];
+
+    for (int i = 0; i < _v; i++) {
+      inverseAdj.add(LinkedList<IntegerEntry>());
+    }
+
+    for (int i = 0; i < _adj.length; i++) {
+      final linkedList = _adj[i];
+      for (final entry in linkedList) {
+        final inverseLinkedList = inverseAdj[entry.value];
+        final inverseEntry = IntegerEntry(i);
+        if (inverseLinkedList.isEmpty) {
+          inverseLinkedList.addFirst(inverseEntry);
+        } else {
+          inverseLinkedList.add(inverseEntry);
+        }
+      }
+    }
+
+    return inverseAdj;
   }
 
   List<int> topoSortKahn() {
@@ -63,6 +86,33 @@ class Graph {
 
     return result;
   }
+
+  List<int> topSortDFS() {
+    final List<LinkedList<IntegerEntry>> inverseAdj = _inverseAdj;
+    final List<bool> visited = List.filled(inverseAdj.length, false);
+    final List<int> result = [];
+
+    for (int i = 0; i < inverseAdj.length; i++) {
+      if (!visited[i]) {
+        visited[i] = true;
+        result.addAll(dfs(i, inverseAdj, visited));
+      }
+    }
+    return result;
+  }
+
+  List<int> dfs(int vertex, List<LinkedList<IntegerEntry>> inverseAdj, List<bool> visited) {
+    final inverseLinkedList = inverseAdj[vertex];
+    final List<int> result = [];
+    for (final entry in inverseLinkedList) {
+      final i = entry.value;
+      if (visited[i]) continue;
+      visited[i] = true;
+      result.addAll(dfs(i, inverseAdj, visited));
+    }
+    result.add(vertex);
+    return result;
+  }
 }
 
 class GraphWidget extends StatelessWidget {
@@ -73,48 +123,56 @@ class GraphWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("邻接表图"),
-      ),
       body: Container(
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (int i = 0; i < graph._v; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    children: [
-                      Text("顶点 $i: "),
-                      Expanded(
-                        child: SizedBox(
-                          height: 60,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.horizontal,
-                            itemCount: graph._adj[i].length,
-                            itemBuilder: (context, index) {
-                              final entry = graph._adj[i].elementAt(index);
-                              return Container(
-                                width: 80,
-                                height: 80,
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: Chip(
-                                  label: Text("${entry.value}"),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              const Text("邻接表图"),
+              ..._buildLinkedLists(graph._adj),
+              const Text("逆邻接表图"),
+              ..._buildLinkedLists(graph._inverseAdj),
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> _buildLinkedLists(List<LinkedList<IntegerEntry>> adj) {
+    final List<Widget> children = [];
+    for (int i = 0; i < adj.length; i++) {
+      children.add(Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Row(
+          children: [
+            Text("顶点 $i: "),
+            Expanded(
+              child: SizedBox(
+                height: 60,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: adj[i].length,
+                  itemBuilder: (context, index) {
+                    final entry = adj[i].elementAt(index);
+                    return Container(
+                      width: 80,
+                      height: 80,
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Chip(
+                        label: Text("${entry.value}"),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ));
+    }
+    return children;
   }
 }
