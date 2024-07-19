@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/edit_distance.dart';
 import 'package:flutter_application_1/eight_queens.dart';
+import 'package:flutter_application_1/topo_sort.dart';
 
 import 'package_0_1.dart';
 
@@ -23,9 +24,20 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    print('==========${'baacbb'.compultMaxSubstringLength_2('baaccbb')}');
-    EightQueens eightQueens = EightQueens();
-    eightQueens.cal8Queens(0);
+    final graph = Graph(10);
+    graph.addEdge(0, 1);
+    graph.addEdge(0, 5);
+    graph.addEdge(0, 2);
+    graph.addEdge(1, 3);
+    graph.addEdge(2, 4);
+    graph.addEdge(2, 5);
+    graph.addEdge(3, 6);
+    graph.addEdge(4, 7);
+    graph.addEdge(5, 8);
+    graph.addEdge(6, 9);
+
+    print('${graph.topoSortKahn()}');
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -33,14 +45,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: Padding(
-          padding: MediaQuery.paddingOf(context) + const EdgeInsets.all(16),
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: eightQueens.resultWidget,
-          ),
-        ),
+        body: GraphWidget(graph),
       ),
     );
   }
