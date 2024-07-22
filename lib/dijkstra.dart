@@ -12,27 +12,76 @@ class Vertex {
 
 /// 边
 class Edge {
-  Edge(this.startId, this.endId, this.weight);
+  Edge(this.start, this.end, this.weight);
 
-  final String startId;
-  final String endId;
+  final Vertex start;
+  final Vertex end;
   final double weight;
 }
 
 /// 图
 class Graph {
-  final Map<String, List<Edge>> _adjacencyTable = {};
+  final Map<Vertex, List<Edge>> _adjacencyTable = {};
 
   void add({
     required Vertex startVertex,
     required Vertex endVertex,
     required double weight,
   }) {
-    final startId = startVertex.id;
-    final edge = Edge(startId, endVertex.id, weight);
-    final edgeList = _adjacencyTable[startId] ?? [];
+    final edge = Edge(startVertex, endVertex, weight);
+    final edgeList = _adjacencyTable[startVertex] ?? [];
     edgeList.add(edge);
-    _adjacencyTable[startId] = edgeList;
+    _adjacencyTable[startVertex] = edgeList;
+    if (_adjacencyTable[endVertex] == null) {
+      _adjacencyTable[endVertex] = [];
+    }
+  }
+
+  List<Vertex> dijkstra(Vertex startVertex, Vertex endVertex) {
+    final Map<Vertex, Vertex> predecessor = {}; // 回溯最短路径
+    final queue = PriorityQueue(_adjacencyTable.length);
+    final Map<Vertex, double> weightCache = {};
+    final Set<Vertex> visited = {};
+
+    for (final key in _adjacencyTable.keys) {
+      weightCache[key] = double.maxFinite;
+    }
+    weightCache[startVertex] = 0;
+    queue.add(startVertex, 0);
+    visited.add(startVertex);
+
+    while (!queue.isEmpty) {
+      final currentVertex = queue.poll();
+      if (currentVertex == null) break;
+      final currentWeight = weightCache[currentVertex] ?? 0;
+      final currentEdges = _adjacencyTable[currentVertex] ?? [];
+
+      for (final Edge edge in currentEdges) {
+        final newWeight = currentWeight + edge.weight;
+        final toVertex = edge.end;
+        final cache = weightCache[toVertex] ?? 0;
+        if (newWeight < cache) {
+          weightCache[toVertex] = newWeight;
+          predecessor[toVertex] = currentVertex;
+
+          if (!visited.contains(edge.end)) {
+            queue.add(toVertex, newWeight);
+            visited.add(toVertex);
+          } else {
+            queue.update(toVertex, newWeight);
+          }
+        }
+      }
+    }
+
+    final List<Vertex> result = [];
+    Vertex? currentVertex = endVertex;
+    while (currentVertex != null) {
+      result.insert(0, currentVertex);
+      currentVertex = predecessor[currentVertex];
+    }
+
+    return result;
   }
 }
 
@@ -76,7 +125,7 @@ class PriorityQueue {
     vertexCount++;
   }
 
-  void update(Vertex vertex, double weightFromStart) {
+  bool update(Vertex vertex, double weightFromStart) {
     int targetIndex = -1;
     for (int i = 0; i < vertexCount; i++) {
       if (list[i].vertex.id == vertex.id) {
@@ -85,8 +134,7 @@ class PriorityQueue {
       }
     }
     if (targetIndex <= 0) {
-      add(vertex, weightFromStart);
-      return;
+      return false;
     }
 
     final newVertex = WeightFromStartVertex(vertex, weightFromStart);
@@ -98,6 +146,7 @@ class PriorityQueue {
       currentIndex = parentIndex;
       parentIndex ~/= 2;
     }
+    return true;
   }
 
   Vertex? poll() {
