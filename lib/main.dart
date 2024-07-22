@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/topo_sort.dart';
 
+import 'dijkstra.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -20,24 +22,30 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final graph = Graph(10);
-    graph.addEdge(1, 2);
-    graph.addEdge(1, 3);
-    graph.addEdge(2, 4);
-    graph.addEdge(2, 5);
-    graph.addEdge(3, 6);
-    graph.addEdge(4, 7);
-    graph.addEdge(5, 8);
-    graph.addEdge(6, 9);
-    graph.addEdge(9, 0);
+    // // 测试数据
+    // Map<int, Node> graph = {
+    //   1: Node(1, {2: 1, 3: 4}),
+    //   2: Node(2, {1: 1, 4: 2, 5: 3}),
+    //   3: Node(3, {1: 4, 6: 2}),
+    //   4: Node(4, {2: 2, 5: 1, 7: 5}),
+    //   5: Node(5, {2: 3, 4: 1, 8: 4}),
+    //   6: Node(6, {3: 2, 9: 3}),
+    //   7: Node(7, {4: 5, 10: 2}),
+    //   8: Node(8, {5: 4}),
+    //   9: Node(9, {6: 3}),
+    //   10: Node(10, {7: 2}),
+    // };
+    // int startNode = 1;
 
-    //Kahn和 DFS 两个算法得到的结果是不一样的，但是这两个结果都是符合要求的。
-    // 生成一个节点的线性序列
-    // 对于图中的每条边 (u, v)，节点 u 在序列中都出现在节点 v 之前
-    // 其中，节点 u->v，就是 u 到 v
-    // 打印出来的结果不一样？？？！！！吓老子一跳
-    print('${graph.topoSortKahn()}');
-    print('${graph.topSortDFS()}');
+    // // 计算最短路径
+    // Dijkstra dijkstra = Dijkstra(graph, startNode);
+    // Map<int, int> shortestDistances = dijkstra.shortestPath();
+
+    // // 打印结果
+    // print("从节点 $startNode 到其他节点的最短距离：");
+    // shortestDistances.forEach((node, distance) {
+    //   print("节点 $node: $distance");
+    // });
 
     return MaterialApp(
       title: 'Flutter Demo',
@@ -46,7 +54,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-        body: GraphWidget(graph),
+        body: Container(),
       ),
     );
   }
